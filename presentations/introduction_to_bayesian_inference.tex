@@ -1,18 +1,18 @@
-\documentclass[handout]{beamer}
-%\documentclass{beamer}
+%\documentclass[handout]{beamer}
+\documentclass{beamer}
 \usepackage{tikz}
 \def\checkmark{\tikz\fill[scale=0.4](0,.35) -- (.25,0) -- (1,.7) -- (.25,.15) -- cycle;} 
 \usepackage{pifont}
 \newcommand{\xmark}{\ding{55}}
 \usepackage{tikz}
 \usepackage{biblatex}
-\usetheme{PaloAlto}
-\title{A beginner's introduction to Bayesian inference}
-\author[Ben Lambert]{Ben Lambert\inst{1}\\ \texttt{ben.c.lambert@gmail.com}}
-\usepackage{datetime}
-\date{}
-\institute[University of Oxford]{
-\inst{1}University of Oxford}
+\usetheme{metropolis}
+
+\title{Introduction to Bayesian inference}
+\author[Yoav Ram]{Yoav Ram \\ Following Ben Lambert, University of Oxford}
+\institute[Tel Aviv University]{School of Zoology, Faculty of Life Sciences, Tel Aviv University}
+\date{15.1.2025}
+
 \beamertemplatenavigationsymbolsempty
 \setbeamertemplate{sidebar left}{}
 \usepackage{caption}
@@ -46,21 +46,21 @@
 \begin{frame}
 \titlepage
 \end{frame}
-
-\begin{frame}
-	\frametitle{Who am I?}
-	\begin{itemize}
-		\item Statistician working on data science, machine learning and statistical inference across the university.
-		\item User of Bayesian statistics for the past X years.
-		\item Born in the same town as Thomas Bayes (Tunbridge Wells).
-	\end{itemize}
-	
-	\onslide<1->
-	\begin{figure}[ht]
-		\centerline{\includegraphics[width=0.6\textwidth]{./figures/tunbridgeWells.jpg}}
-	\end{figure}
-	
-\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Who am I?}
+%	\begin{itemize}
+%		\item Statistician working on data science, machine learning and statistical inference across the university.
+%		\item User of Bayesian statistics for the past X years.
+%		\item Born in the same town as Thomas Bayes (Tunbridge Wells).
+%	\end{itemize}
+%	
+%	\onslide<1->
+%	\begin{figure}[ht]
+%		\centerline{\includegraphics[width=0.6\textwidth]{./figures/tunbridgeWells.jpg}}
+%	\end{figure}
+%	
+%\end{frame}
 
 
 \begin{frame}
@@ -68,7 +68,6 @@
 	By the end of this lecture you should:
 	
 	\begin{itemize}
-		\item Know what probability distributions are and why they are used in modelling.
 		\item Understand the goal of statistical inference.
 		\item Appreciate how Bayesian and frequentist approaches to inference achieve this goal.
 		\item Know the elements required to do Bayesian inference and appreciate how they affect inferences.
@@ -94,15 +93,10 @@
 	\begin{itemize}
 		\item<2-> Simple and intuitive model building (unlike frequentist statistics there is no need to remember lots of specific formulae).
 		\item<3-> Exhaustive and creative model testing.
-		\item<4-> The best predictions; for example, Nate Silver.
-		\item<5-> Allows estimation of models that would be impossible in frequentist statistics: especially true in epidemiology!
+		\item<4-> The best predictions! 
+		\item<5-> Allows estimation of models that would be impossible in frequentist statistics: especially true in ecology, evolution and epidemiology.
 	\end{itemize}
-	
-	\onslide<5->
-	\begin{figure}[ht]
-		\centerline{\includegraphics[width=0.3\textwidth]{./figures/nateSilver.jpg}}
-	\end{figure}
-	
+		
 \end{frame}
 
 \begin{frame}
@@ -360,7 +354,8 @@
 	\end{itemize}
 	
 	\begin{figure}[ht]
-		\centerline{\includegraphics[width=0.8\textwidth]{./figures/laplace.jpg}}
+		\centerline{\includegraphics[width=0.3\textwidth]{./figures/laplace.jpg}}
+		\caption{Pierre-Simon Laplace (1749–1827), a French mathematician and astronomer, formalized Bayesian inference by generalizing Bayes' theorem and introducing the use of priors.}
 	\end{figure}
 	
 \end{frame}
@@ -693,10 +688,10 @@
 	
 	\onslide<4-> This is equivalent to working out a $(d+1)$-dimensional \textbf{volume} contained within a $d$-dimensional (hyper-surface)!
 	
-	\onslide<5->
-	\begin{figure}
-		\centerline{\includegraphics[width=0.5\textwidth]{./figures/lec2_dogIroning.pdf}}
-	\end{figure}
+%	\onslide<5->
+%	\begin{figure}
+%		\centerline{\includegraphics[width=0.3\textwidth]{./figures/lec2_dogIroning.pdf}}
+%	\end{figure}
 	
 \end{frame}
 
@@ -714,103 +709,101 @@
 	
 \end{frame}
 
-\section{Conjugate priors}
-\frame{\tableofcontents[currentsection]}
-
-\begin{frame}
-	\frametitle{What are conjugate priors?}
-	
-	\onslide<2->
-	Judicious choice of prior and likelihood can make posterior calculation trivial.
-	
-	\begin{itemize}
-		\item<3-> Choose a likelihood $L$.
-		\item<4-> Choose a prior $\theta\sim f\in F$, where:
-		\begin{itemize}
-			\item[-]<5-> $F$ is a family of distributions.
-			\item[-]<6-> $f$ is a member of that \textbf{same} family.
-		\end{itemize}
-		\item<7-> If posterior, $\theta|X\sim f'\in F$ $\implies$ conjugate!
-		\item<8-> In other words both the \textbf{prior} and \textbf{posterior} are members of the same distribution!
-	\end{itemize}
-	
-\end{frame}
-
-\begin{frame}
-	\frametitle{Conjugate priors}
-	
-	\begin{itemize}
-		\item<3-> For likelihood (if independent and identically-distributed):
-		\onslide<4-> 
-		\begin{equation}
-		X \sim \mathcal{B}(10,\theta)\implies p(X|\theta)\propto \theta^X (1-\theta)^{10-X}
-		\end{equation}
-		\item<5-> For prior assume a beta distribution (a reasonable choice if $\theta\in(0,1)$):
-		\onslide<6->
-		\begin{equation}
-		\theta\sim \text{beta}(a,b) \implies p(\theta) \propto \theta^{a-1}(1-\theta)^{b-1}
-		\end{equation}
-		\item<7-> Numerator of Bayes' rule for inference: 
-		\onslide<8->
-		\begin{equation}
-		p(X|\theta)\times p(\theta) \propto \theta^X (1-\theta)^{10-X} \times \theta^{a-1}(1-\theta)^{b-1}
-		\end{equation}
-	\end{itemize}
-\end{frame}
-
-\begin{frame}
-	\frametitle{Conjugate priors}
-	\begin{itemize}
-		\item<2-> Numerator of Bayes' rule for inference: 
-		\onslide<3->
-		\begin{align*}
-		p(X|\theta)\times p(\theta) &\propto \theta^X (1-\theta)^{10-X} \times \theta^{a-1}(1-\theta)^{b-1}\\
-		\onslide<4->{&=\theta^{X+a-1} (1-\theta)^{10-X+b-1}}
-		\end{align*}
-		\item<5-> This has same $\theta$-dependence as a $\text{beta}(X+a,10-X+b)$ density $\implies$ must be this distribution!
-		\item<6-> $\therefore$ a beta prior is \textit{conjugate} to a binomial likelihood.
-	\end{itemize}
-\end{frame}
-
-
-\begin{frame}
-	\frametitle{Table of common conjugate pairs of likelihoods and priors}
-	
-	\onslide<2-> {No need to do any integrals! Just lookup rules:
-		
-		\vspace{0.4cm}}
-	
-	\small
-	\begin{tabular}{lll}
-		\onslide<3-> \textbf{Likelihood} & \onslide<4-> \textbf{Prior} & \onslide<5-> \textbf{Posterior} \\
-		\hline
-		\onslide<6-> Bernoulli & \onslide<7-> $\text{beta}(\alpha,\beta)$   & \onslide<8-> $\text{beta}(\alpha+\sum\limits_{i=1}^{n}X_i,\beta+n-\sum\limits_{i=1}^{n}X_i)$ \\
-		\onslide<9-> Binomial & $\text{beta}(\alpha,\beta)$  &  $\text{beta}(\alpha+\sum\limits_{i=1}^{n}X_i,\beta+\sum\limits_{i=1}^{n}N_i-\sum\limits_{i=1}^{n}X_i)$ \\
-		\onslide<10-> Poisson & $\text{Gamma}(\alpha,\beta)$ &  $\text{Gamma}(\alpha+\sum\limits_{i=1}^{n}X_i,\beta+n)$\\
-		\onslide<11-> Multinomial & $\text{Dirichlet}(\boldsymbol{\alpha})$ & $\text{Dirichlet}(\boldsymbol{\alpha}+\sum\limits_{i=1}^{n} \boldsymbol{X}_i)$\\
-		\onslide<12-> Normal & Normal-inv-$\Gamma$ & Normal-inv-$\Gamma$ 
-	\end{tabular}%
-	
-\end{frame}
-
-\begin{frame}
-	\frametitle{Limits of conjugate modelling}
-	\onslide<2-> Using conjugate priors is limiting because:
-	
-	\begin{itemize}
-		\item<3-> Often restricted to univariate problems.
-		\begin{itemize}
-			\item[-]<4-> $\implies$ we could just use numerical quadrature instead.
-		\end{itemize}
-		\item<5-> Required to use relevant conjugate prior for a given likelihood $\impliedby$ may not be sufficient to capture pre-data beliefs of analyst.
-	\end{itemize}
-	
-	\onslide<1->
-	\begin{figure}
-		\centerline{\includegraphics[width=0.7\textwidth]{./figures/trapped.jpg}}
-	\end{figure}
-	
-\end{frame}
+%\section{Conjugate priors}
+%\frame{\tableofcontents[currentsection]}
+%
+%\begin{frame}
+%    \frametitle{What are Conjugate Priors?}
+%
+%    \onslide<1-> A conjugate prior is a prior distribution that, when combined with a specific likelihood, results in a posterior distribution of the same family.
+%
+%    \begin{itemize}
+%        \item<2-> Choose a likelihood \( L \).
+%        \item<3-> Choose a prior \( \theta \sim f \in F \), where:
+%        \begin{itemize}
+%            \item<4-> \( F \) is a family of distributions.
+%            \item<5-> \( f \) is a member of that same family.
+%        \end{itemize}
+%        \item<6-> If the posterior \( \theta | X \sim f' \in F \), then the prior is conjugate.
+%        \item<7-> In simpler terms, both the \textbf{prior} and \textbf{posterior} belong to the same family of distributions.
+%    \end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Conjugate priors}
+%	
+%	\begin{itemize}
+%		\item<3-> For likelihood (if independent and identically-distributed):
+%		\onslide<4-> 
+%		\begin{equation}
+%		X \sim \mathcal{B}(10,\theta)\implies p(X|\theta)\propto \theta^X (1-\theta)^{10-X}
+%		\end{equation}
+%		\item<5-> For prior assume a beta distribution (a reasonable choice if $\theta\in(0,1)$):
+%		\onslide<6->
+%		\begin{equation}
+%		\theta\sim \text{beta}(a,b) \implies p(\theta) \propto \theta^{a-1}(1-\theta)^{b-1}
+%		\end{equation}
+%		\item<7-> Numerator of Bayes' rule for inference: 
+%		\onslide<8->
+%		\begin{equation}
+%		p(X|\theta)\times p(\theta) \propto \theta^X (1-\theta)^{10-X} \times \theta^{a-1}(1-\theta)^{b-1}
+%		\end{equation}
+%	\end{itemize}
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Conjugate priors}
+%	\begin{itemize}
+%		\item<2-> Numerator of Bayes' rule for inference: 
+%		\onslide<3->
+%		\begin{align*}
+%		p(X|\theta)\times p(\theta) &\propto \theta^X (1-\theta)^{10-X} \times \theta^{a-1}(1-\theta)^{b-1}\\
+%		\onslide<4->{&=\theta^{X+a-1} (1-\theta)^{10-X+b-1}}
+%		\end{align*}
+%		\item<5-> This has same $\theta$-dependence as a $\text{beta}(X+a,10-X+b)$ density $\implies$ must be this distribution!
+%		\item<6-> $\therefore$ a beta prior is \textit{conjugate} to a binomial likelihood.
+%	\end{itemize}
+%\end{frame}
+%
+%
+%\begin{frame}
+%	\frametitle{Table of common conjugate pairs of likelihoods and priors}
+%	
+%	\onslide<2-> {No need to do any integrals! Just lookup rules:
+%		
+%		\vspace{0.4cm}}
+%	
+%	\small
+%	\begin{tabular}{lll}
+%		\onslide<3-> \textbf{Likelihood} & \onslide<4-> \textbf{Prior} & \onslide<5-> \textbf{Posterior} \\
+%		\hline
+%		\onslide<6-> Bernoulli & \onslide<7-> $\text{beta}(\alpha,\beta)$   & \onslide<8-> $\text{beta}(\alpha+\sum\limits_{i=1}^{n}X_i,\beta+n-\sum\limits_{i=1}^{n}X_i)$ \\
+%		\onslide<9-> Binomial & $\text{beta}(\alpha,\beta)$  &  $\text{beta}(\alpha+\sum\limits_{i=1}^{n}X_i,\beta+\sum\limits_{i=1}^{n}N_i-\sum\limits_{i=1}^{n}X_i)$ \\
+%		\onslide<10-> Poisson & $\text{Gamma}(\alpha,\beta)$ &  $\text{Gamma}(\alpha+\sum\limits_{i=1}^{n}X_i,\beta+n)$\\
+%		\onslide<11-> Multinomial & $\text{Dirichlet}(\boldsymbol{\alpha})$ & $\text{Dirichlet}(\boldsymbol{\alpha}+\sum\limits_{i=1}^{n} \boldsymbol{X}_i)$\\
+%		\onslide<12-> Normal & Normal-inv-$\Gamma$ & Normal-inv-$\Gamma$ 
+%	\end{tabular}%
+%	
+%\end{frame}
+%
+%\begin{frame}
+%	\frametitle{Limits of conjugate modelling}
+%	\onslide<2-> Using conjugate priors is limiting because:
+%	
+%	\begin{itemize}
+%		\item<3-> Often restricted to univariate problems.
+%		\begin{itemize}
+%			\item[-]<4-> $\implies$ we could just use numerical quadrature instead.
+%		\end{itemize}
+%		\item<5-> Required to use relevant conjugate prior for a given likelihood $\impliedby$ may not be sufficient to capture pre-data beliefs of analyst.
+%	\end{itemize}
+%	
+%	\onslide<1->
+%	\begin{figure}
+%		\centerline{\includegraphics[width=0.4\textwidth]{./figures/trapped.jpg}}
+%	\end{figure}
+%	
+%\end{frame}
 
 \begin{frame}
 	\frametitle{Longer-term solution}
@@ -840,21 +833,21 @@
 	\end{itemize}
 	
 \end{frame}
-
-
-\begin{frame}
-	\frametitle{Not sure I understand?}
-	
-	\onslide<1-> Bayesian statistics:{
-		\begin{equation}
-		p(\theta|\boldsymbol{D}) = \frac{p(\boldsymbol{D}|\theta)\times p(\theta)}{p(\boldsymbol{D})}
-		\end{equation}}
-	
-	\onslide<1-> Beigeian statistics:{
-		\begin{equation}
-		\textcolor{beige}{p(\theta|\boldsymbol{D}) = \frac{p(\boldsymbol{D}|\theta)\times p(\theta)}{p(\boldsymbol{D})}}
-		\end{equation}}
-	
-\end{frame}
+%
+%
+%\begin{frame}
+%	\frametitle{Not sure I understand?}
+%	
+%	\onslide<1-> Bayesian statistics:{
+%		\begin{equation}
+%		p(\theta|\boldsymbol{D}) = \frac{p(\boldsymbol{D}|\theta)\times p(\theta)}{p(\boldsymbol{D})}
+%		\end{equation}}
+%	
+%	\onslide<1-> Beigeian statistics:{
+%		\begin{equation}
+%		\textcolor{beige}{p(\theta|\boldsymbol{D}) = \frac{p(\boldsymbol{D}|\theta)\times p(\theta)}{p(\boldsymbol{D})}}
+%		\end{equation}}
+%	
+%\end{frame}
 
 \end{document}
